@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ytwy.oa.dao.EntryMapper">
+	<resultMap id="entryResultMap" type="cn.ytwy.oa.entity.Entry">
+		<id column="entry_id" property="entryId" jdbcType="INTEGER" />
+		<result column="entry_name" property="entryName" jdbcType="VARCHAR" />
+		<result column="entry_sex" property="entrySex" jdbcType="VARCHAR" />
+		<result column="entry_email" property="entryEmail" jdbcType="VARCHAR" />
+		<result column="entry_phone" property="entryPhone" jdbcType="VARCHAR" />
+		<result column="entry_address" property="entryAddress"
+			jdbcType="VARCHAR" />
+		<result column="entry_info" property="entryInfo" jdbcType="VARCHAR" />
+		<result column="dept_id" property="deptId" jdbcType="INTEGER" />
+		<result column="job_id" property="jobId" jdbcType="INTEGER" />
+		<result column="status" property="status" jdbcType="TINYINT" />
+	</resultMap>
+	<!-- 添加 -->
+	<insert id="insert" parameterType="entry">
+		insert into entry
+		(entry_name,entry_sex,entry_email,entry_phone,entry_address,entry_info,dept_id,job_id)
+		values
+		(#{entryName},#{entrySex},#{entryEmail},#{entryPhone},#{entryAddress},#{entryInfo},#{deptId},#{jobId});
+	</insert>
+	<!-- 修改是否同通过审批 -->
+	<update id="updatepass" parameterType="entry">
+		update entry set
+		status =
+		#{status}
+		where
+		entry_id = #{entryId}
+	</update>
+
+	<!-- 通过多条件分页查询，返回数据集 -->
+	<select id="selectPageListUseDyc" parameterType="page"
+		resultMap="entryResultMap">
+		select * from entry
+		<where>
+			<if test="condition.status!=null">and status = #{condition.status}</if>
+		</where>
+		limit #{start},#{length}
+	</select>
+
+	<!-- 通过多条件分页查询，返回总记录数 -->
+	<select id="selectPageCountUseDyc" parameterType="page"
+		resultType="Integer">
+		select count(1) from entry
+		<where>
+			<if test="condition.status!=null">and status = #{condition.status}</if>
+		</where>
+	</select>
+</mapper>

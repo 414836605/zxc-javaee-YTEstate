@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.ytwy.oa.dao.GarageMapper">
+	<resultMap id="garageResultMap" type="cn.ytwy.oa.entity.Garage">
+		<id column="garage_id" property="garageId" jdbcType="INTEGER" />
+		<result column="garage_area" property="garageArea" jdbcType="INTEGER" />
+		<result column="garage_fee" property="garageFee" jdbcType="REAL" />
+	</resultMap>
+
+	<insert id="insert" parameterType="garage">
+		insert into garage (
+		garage_area, garage_fee)
+		values (
+		#{garageArea,jdbcType=VARCHAR},
+		#{garageFee,jdbcType=INTEGER})
+	</insert>
+	<update id="update" parameterType="garage">
+		update garage
+		set
+		garage_area = #{garageArea,jdbcType=VARCHAR},
+		garage_fee =
+		#{garageFee,jdbcType=INTEGER}
+		where garage_id = #{garageId,jdbcType=INTEGER}
+	</update>
+	<delete id="delete" parameterType="garage">
+		delete from garage
+		where garage_id = #{garageId,jdbcType=INTEGER}
+	</delete>
+	
+	
+	
+	<select id="select" parameterType="garage"
+		resultMap="garageResultMap">
+		select * 
+		from garage
+		where garage_id = #{garageId,jdbcType=INTEGER}
+	</select>
+	<select id="selectPageList" parameterType="page" resultMap="garageResultMap">
+		select * from garage limit #{start},#{length}
+	</select>
+	<select id="selectPageCount" parameterType="page" resultType="Integer">
+		select count(1) from garage
+	</select>
+</mapper>

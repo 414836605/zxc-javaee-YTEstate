@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ytwy.oa.dao.BuildMapper">
+	<resultMap id="buildResultMap" type="cn.ytwy.oa.entity.Build">
+		<id column="build_id" jdbcType="INTEGER" property="buildId" />
+		<result column="build_type" jdbcType="VARCHAR" property="buildType" />
+		<result column="build_area" jdbcType="INTEGER" property="buildArea" />
+		<result column="build_fee" jdbcType="REAL" property="buildFee" />
+	</resultMap>
+	<insert id="insert" parameterType="build">
+		insert into build (
+		build_type, build_area,
+		build_fee)
+		values (
+		#{buildType,jdbcType=VARCHAR},
+		#{buildArea,jdbcType=INTEGER},
+		#{buildFee,jdbcType=REAL})
+	</insert>
+	<update id="update" parameterType="build">
+		update build
+		set
+		build_type = #{buildType,jdbcType=VARCHAR},
+		build_area =
+		#{buildArea,jdbcType=INTEGER},
+		build_fee = #{buildFee,jdbcType=REAL}
+		where build_id = #{buildId,jdbcType=INTEGER}
+	</update>
+	<delete id="delete" parameterType="build">
+		delete from build
+		where build_id = #{buildId,jdbcType=INTEGER}
+	</delete>
+	
+	
+	
+	<select id="select" parameterType="build"
+		resultMap="buildResultMap">
+		select * 
+		from build
+		where build_id = #{buildId,jdbcType=INTEGER}
+	</select>
+	<select id="selectPageList" parameterType="page" resultMap="buildResultMap">
+		select * from build limit #{start},#{length}
+	</select>
+	<select id="selectPageCount" parameterType="page" resultType="Integer">
+		select count(1) from build
+	</select>
+
+</mapper>

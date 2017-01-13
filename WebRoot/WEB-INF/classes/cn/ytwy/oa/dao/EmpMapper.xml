@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ytwy.oa.dao.EmpMapper" >
+  <resultMap id="empResultMap" type="cn.ytwy.oa.entity.Emp" >
+    <id column="emp_id" property="empId" jdbcType="INTEGER" />
+    <result column="emp_user" property="empUser" jdbcType="VARCHAR" />
+    <result column="emp_password" property="empPassword" jdbcType="VARCHAR" />
+    <result column="emp_role" property="empRole" jdbcType="INTEGER" />
+    <result column="emp_name" property="empName" jdbcType="VARCHAR" />
+    <result column="emp_sex" property="empSex" jdbcType="VARCHAR" />
+    <result column="emp_birthdate" property="empBirthdate" jdbcType="TIMESTAMP" />
+    <result column="emp_email" property="empEmail" jdbcType="VARCHAR" />
+    <result column="emp_phone" property="empPhone" jdbcType="VARCHAR" />
+    <result column="emp_address" property="empAddress" jdbcType="VARCHAR" />
+    <result column="emp_info" property="empInfo" jdbcType="VARCHAR" />
+    <result column="dept_id" property="deptId" jdbcType="INTEGER" />
+    <result column="job_id" property="jobId" jdbcType="INTEGER" />
+  </resultMap>
+  <!-- 用户登陆 -->
+  <select id="login" parameterType="Emp" resultMap="empResultMap">
+  	select * from emp where emp_user =#{empUser} and emp_password =#{empPassword} 
+  </select>
+  
+  <!-- 添加 -->
+	<insert id="insert" parameterType="emp">
+		insert into emp
+		(emp_user,emp_password,emp_role,emp_name,emp_sex,emp_birthdate,emp_email,emp_phone,emp_address,emp_info,dept_id,job_id)
+		values
+		(#{empUser},#{empPassword},#{empRole},#{empName},#{empSex},#{empBirthdate},#{empEmail},#{empPhone},#{empAddress},#{empInfo},#{deptId},#{jobId});
+	</insert>
+
+	<!-- 修改 -->
+	<update id="update" parameterType="emp">
+		update emp set
+		emp_role = #{empRole},
+		emp_name = #{empName},
+		emp_sex = #{empSex},
+		emp_email = #{empEmail},
+		emp_phone = #{empPhone},
+		emp_address = #{empAddress},
+		emp_info = #{empInfo},
+		dept_id = #{deptId},
+		job_id = #{jobId}
+		where
+		emp_id = #{empId}
+	</update>
+
+	<!-- 删除 -->
+	<delete id="delete" parameterType="emp">
+		delete from emp where emp_id = #{empId}
+	</delete>
+
+	<!-- 单条件查询 -->
+	<select id="select" parameterType="emp" resultMap="empResultMap">
+		select *
+		from emp where emp_id = #{empId}
+	</select>
+
+	<!-- 分页查询，返回数据集 -->
+	<select id="selectPageList" parameterType="page" resultMap="empResultMap">
+		select * from emp limit #{start},#{length}
+	</select>
+
+	<!-- 分页查询，返回总记录数 -->
+	<select id="selectPageCount" parameterType="page" resultType="Integer">
+		select count(1) from emp
+	</select>
+</mapper>

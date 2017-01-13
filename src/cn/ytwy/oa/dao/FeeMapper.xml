@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ytwy.oa.dao.FeeMapper">
+	<resultMap id="feeResultMap" type="cn.ytwy.oa.entity.Fee">
+		<id column="fee_id" jdbcType="INTEGER" property="feeId" />
+		<result column="owner_id" jdbcType="INTEGER" property="ownerId" />
+		<result column="fee_time" jdbcType="TIMESTAMP" property="feeTime" />
+		<result column="fee_build" jdbcType="INTEGER" property="feeBuild" />
+		<result column="fee_garage" jdbcType="INTEGER" property="feeGarage" />
+		<result column="fee_park" jdbcType="INTEGER" property="feePark" />
+		<result column="fee_type" jdbcType="TINYINT" property="feeType" />
+		<result column="owner_name" jdbcType="VARCHAR" property="ownerName" />
+	</resultMap>
+
+
+	<update id="pay" parameterType="int">
+		update fee
+		set
+		fee_type = 1
+		where
+		fee_id = #{id}
+	</update>
+
+	<select id="selectPageListJointOwner" parameterType="page"
+		resultMap="feeResultMap">
+		select fee_id, fee.owner_id, fee_time,fee_build,fee_garage,fee_park, fee_type, owner_name,
+		fee_build, fee_garage, fee_park
+		from fee
+		inner join owner
+		<where>
+			fee.owner_id = owner.owner_id
+			<if test="startTime!=null and endTime!=null">and fee_time between #{startTime} and #{endTime}</if>
+			<if test="searchText!=null">and owner.owner_name like CONCAT('%',#{searchText},'%')</if>
+		</where>
+		limit #{start},#{length}
+	</select>
+
+	<select id="selectPageCountJointOwner" parameterType="page"
+		resultType="Integer">
+		select count(1)
+		from fee
+		inner join owner
+		<where>
+			fee.owner_id = owner.owner_id
+			<if test="startTime!=null and endTime!=null">and fee_time between #{startTime} and #{endTime}</if>
+			<if test="searchText!=null">and owner_name like CONCAT('%',#{searchText},'%')</if>
+		</where>
+	</select>
+
+	<select id="selectPageListJointOwnerUseDyc" parameterType="page"
+		resultMap="feeResultMap">
+		select fee_id, fee.owner_id, fee_time,fee_build,fee_garage,fee_park, fee_type, owner_name,
+		fee_build, fee_garage, fee_park
+		from fee
+		inner join owner
+		<where>
+			fee.owner_id = owner.owner_id
+			<if test="condition.feeType!=null">and fee_type = #{condition.feeType}</if>
+			<if test="startTime!=null and endTime!=null">and fee_time between #{startTime} and #{endTime}</if>
+			<if test="searchText!=null">and owner_name like CONCAT('%',#{searchText},'%')</if>
+		</where>
+		limit #{start},#{length}
+	</select>
+
+	<select id="selectPageCountJointOwnerUseDyc" parameterType="page"
+		resultType="Integer">
+		select count(1)
+		from fee
+		inner join owner
+		<where>
+			fee.owner_id = owner.owner_id
+			<if test="condition.feeType!=null">and fee_type = #{condition.feeType}</if>
+			<if test="startTime!=null and endTime!=null">and fee_time between #{startTime} and #{endTime}</if>
+			<if test="searchText!=null">and owner_name like CONCAT('%',#{searchText},'%')</if>
+		</where>
+	</select>
+	
+	
+	<select id="selectAllJointOwnerPayed" parameterType="page"
+		resultMap="feeResultMap">
+		select *
+		from fee
+		inner join owner
+		where fee.owner_id = owner.owner_id
+		and fee_type = 1
+	</select>
+
+</mapper>

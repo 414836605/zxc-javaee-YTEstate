@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ytwy.oa.dao.SalaryMapper">
+	<resultMap id="salaryResultMap" type="cn.ytwy.oa.entity.Salary">
+		<id column="salary_id" jdbcType="INTEGER" property="salaryId" />
+		<result column="emp_id" jdbcType="INTEGER" property="empId" />
+		<result column="salary_bc" jdbcType="VARCHAR" property="salaryBc" />
+		<result column="salary_day" jdbcType="INTEGER" property="salaryDay" />
+		<result column="salary_attendance" jdbcType="TINYINT" property="salaryAttendance" />
+		<result column="salary_add" jdbcType="INTEGER" property="salaryAdd" />
+		<result column="salary_full" jdbcType="INTEGER" property="salaryFull" />
+		<result column="salary_overtime_money" jdbcType="INTEGER"
+			property="salaryOvertimeMoney" />
+		<result column="salary_overtime_day" jdbcType="INTEGER"
+			property="salaryOvertimeDay" />
+		<result column="salary_subsidy" jdbcType="INTEGER" property="salarySubsidy" />
+		<result column="salary_meal" jdbcType="INTEGER" property="salaryMeal" />
+		<result column="salary_deduct_phone" jdbcType="INTEGER"
+			property="salaryDeductPhone" />
+		<result column="salary_deduct_fine" jdbcType="INTEGER"
+			property="salaryDeductFine" />
+		<result column="salary_deduct_tax" jdbcType="INTEGER" property="salaryDeductTax" />
+		<result column="salary_deduct_insurance" jdbcType="INTEGER"
+			property="salaryDeductInsurance" />
+		<result column="salary_time" jdbcType="TIMESTAMP"
+			property="salaryTime" />
+
+		<result column="emp_name" jdbcType="VARCHAR" property="empName" />
+		<result column="emp_idcard" jdbcType="VARCHAR" property="empIdcard" />
+		<result column="job_id" jdbcType="INTEGER" property="jobId" />
+	</resultMap>
+	<select id="selectPageList" parameterType="page" resultMap="salaryResultMap">
+		select salary_id, salary.emp_id, emp_name, job_id, salary_bc,
+		salary_day,
+		salary_attendance, salary_add, salary_full,
+		salary_overtime_money, salary_overtime_day,
+		salary_subsidy,
+		salary_meal,
+		salary_deduct_phone,
+		salary_deduct_fine,
+		salary_deduct_tax,
+		salary_deduct_insurance,
+		salary_time
+		from salary
+		inner join emp
+		<where>
+			salary.emp_id = emp.emp_id
+			<if test="startTime!=null and endTime!=null">and salary_time between #{startTime} and #{endTime}</if>
+			<if test="searchText!=null">and emp_name like CONCAT('%',#{searchText},'%')</if>
+		</where>
+		limit
+		#{start},#{length}
+	</select>
+
+	<select id="selectPageCount" parameterType="page" resultType="Integer">
+		select count(1)
+		from salary
+		inner join emp
+		<where>
+			salary.emp_id = emp.emp_id
+			<if test="startTime!=null and endTime!=null">and salary_time between #{startTime} and #{endTime}</if>
+			<if test="searchText!=null">and emp_name like CONCAT('%',#{searchText},'%')</if>
+		</where>
+	</select>
+	<select id="selectAll" parameterType="page" resultMap="salaryResultMap">
+		select *
+		from salary
+		inner join emp
+		where salary.emp_id = emp.emp_id
+	</select>
+	
+</mapper>

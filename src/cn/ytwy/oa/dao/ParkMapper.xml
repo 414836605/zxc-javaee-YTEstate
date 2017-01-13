@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.ytwy.oa.dao.ParkMapper">
+	<resultMap id="parkResultMap" type="cn.ytwy.oa.entity.Park">
+		<id column="park_id" property="parkId" jdbcType="INTEGER" />
+		<result column="park_area" property="parkArea" jdbcType="INTEGER" />
+		<result column="park_fee" property="parkFee" jdbcType="REAL" />
+	</resultMap>
+	<insert id="insert" parameterType="park">
+		insert into park (
+		park_area, park_fee)
+		values (
+		#{parkArea,jdbcType=VARCHAR},
+		#{parkFee,jdbcType=INTEGER})
+	</insert>
+	<update id="update" parameterType="park">
+		update park
+		set
+		park_area =
+		#{parkArea,jdbcType=VARCHAR},
+		park_fee =
+		#{parkFee,jdbcType=INTEGER}
+		where park_id =
+		#{parkId,jdbcType=INTEGER}
+	</update>
+	<delete id="delete" parameterType="park">
+		delete from park
+		where
+		park_id = #{parkId,jdbcType=INTEGER}
+	</delete>
+
+
+
+	<select id="select" parameterType="park" resultMap="parkResultMap">
+		select *
+		from park
+		where park_id = #{parkId,jdbcType=INTEGER}
+	</select>
+	<select id="selectPageList" parameterType="page" resultMap="parkResultMap">
+		select * from park limit #{start},#{length}
+	</select>
+	<select id="selectPageCount" parameterType="page" resultType="Integer">
+		select count(1) from park
+	</select>
+</mapper>

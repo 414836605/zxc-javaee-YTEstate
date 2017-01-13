@@ -1,0 +1,9 @@
+
+
+
+基础信息 base
+收费信息 fee
+日常管理 daily
+人事管理 personnel
+财务管理 finace
+统计报表 statistics

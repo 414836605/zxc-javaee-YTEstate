@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.ytwy.oa.dao.BuyMapper">
+	<resultMap id="buyResultMap" type="cn.ytwy.oa.entity.Buy">
+		<id column="buy_id" property="buyId" jdbcType="INTEGER" />
+		<result column="buy_name" property="buyName" jdbcType="VARCHAR" />
+		<result column="buy_item" property="buyItem" jdbcType="VARCHAR" />
+		<result column="buy_num" property="buyNum" jdbcType="INTEGER" />
+		<result column="buy_coast" property="buyCoast" jdbcType="REAL" />
+		<result column="buy_use" property="buyUse" jdbcType="VARCHAR" />
+		<result column="buy_phone" property="buyPhone" jdbcType="VARCHAR" />
+		<result column="buy_time" property="buyTime" jdbcType="TIMESTAMP" />
+		<result column="buy_status" property="buyStatus" jdbcType="TINYINT" />
+		<result column="buy_reply" property="buyReply" jdbcType="VARCHAR"/>
+	</resultMap>
+	<!-- 添加 -->
+	<insert id="insert" parameterType="buy">
+		insert into buy
+		(buy_name,buy_item,buy_num,buy_coast,buy_use,buy_phone,buy_time,buy_status)
+		values
+		(#{buyName},#{buyItem},#{buyNum},#{buyCoast},#{buyUse},#{buyPhone},#{buyTime},#{buyStatus});
+	</insert>
+	<!-- 修改是否同通过审批 -->
+	<update id="updatepass" parameterType="buy">
+		update buy set
+		buy_status = #{buyStatus}, buy_reply = #{buyReply}
+		where
+		buy_id = #{buyId}
+	</update>
+	
+	<!-- 查询未审核的数据 -->
+	<select id="selectPageNotCheckList" parameterType="page" resultMap="buyResultMap">
+		select * from buy where buy_status = 0 limit #{start},#{length}
+	</select>
+
+	<!-- 查询未审核的数据记录数 -->
+	<select id="selectPageNotCheckCount" parameterType="page" resultType="Integer">
+		select count(1) from buy where buy_status = 0
+	</select>
+	
+	
+	<!-- 分页查询，返回数据集 -->
+	<select id="selectPageList" parameterType="page" resultMap="buyResultMap">
+		select * from buy limit #{start},#{length}
+	</select>
+
+	<!-- 分页查询，返回总记录数 -->
+	<select id="selectPageCount" parameterType="page" resultType="Integer">
+		select count(1) from buy
+	</select>
+	
+	<!-- 通过多条件分页查询，返回数据集 -->
+	<select id="selectPageListUseDyc" parameterType="page" resultMap="buyResultMap">
+		select * from buy
+		<where>
+			<if test="condition.buyStatus!=null">and buy_status = #{condition.buyStatus}</if>
+			<if test="startTime!=null and endTime!=null">and buy_time between #{startTime} and #{endTime}</if>
+			<if test="searchText!=null">and buy_name like CONCAT('%',#{searchText},'%')</if>
+		</where>
+		limit #{start},#{length}
+	</select>
+
+	<!-- 通过多条件分页查询，返回总记录数 -->
+	<select id="selectPageCountUseDyc" parameterType="page" resultType="Integer">
+		select count(1) from buy
+		<where>
+			<if test="condition.buyStatus!=null">and buy_status = #{condition.buyStatus}</if>
+			<if test="startTime!=null and endTime!=null">and buy_time between #{startTime} and #{endTime}</if>
+			<if test="searchText!=null">and buy_name like CONCAT('%',#{searchText},'%')</if>
+		</where>
+	</select>
+	
+	<select id="selectAllFinish" parameterType="page" resultMap="buyResultMap">
+		select * from buy where buy_status = 1
+	</select>
+</mapper>

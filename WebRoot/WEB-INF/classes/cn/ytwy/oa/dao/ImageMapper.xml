@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.ytwy.oa.dao.ImageMapper" >
+  <resultMap id="BaseResultMap" type="cn.ytwy.oa.entity.Image" >
+    <id column="image_id" property="imageId" jdbcType="INTEGER" />
+    <result column="image_type" property="imageType" jdbcType="VARCHAR" />
+    <result column="image_ref_id" property="imageRefId" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="cn.ytwy.oa.entity.Image" extends="BaseResultMap" >
+    <result column="image_data" property="imageData" jdbcType="LONGVARBINARY" />
+  </resultMap>
+
+</mapper>
